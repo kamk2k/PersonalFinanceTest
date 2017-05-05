@@ -4,11 +4,12 @@ import com.corellidev.personalfinance.ExpenseRepository;
 import com.corellidev.personalfinance.model.ExpenseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Kamil on 2017-04-13.
@@ -39,12 +40,11 @@ public class AddExpenseController {
     }
 
     @RequestMapping("/")
-    public String defTest() {
-        String result = "";
+    public List<ExpenseModel> defTest() {
+        List<ExpenseModel> list = new ArrayList<>();
         for (ExpenseModel model : expenseRepository.findAll()) {
-            result = result + model.toString() + " ";
+            list.add(model);
         }
-
-        return result;
+        return list;
     }
 }
