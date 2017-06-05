@@ -7,7 +7,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Kamil on 2017-05-03.
@@ -23,58 +25,36 @@ public class GenerateMonthReportUseCase {
     public GenerateMonthReportUseCase() {
     }
 
-    // TODO: 2017-05-03 allow using custom categories
     public String getReport(long timestamp) {
         long monthAgoTimestamp = timestamp - MONTH_IN_MS;
         List<ExpenseModel> lastMonthExpenses = expenseRepository.findByTimestampGreaterThan(monthAgoTimestamp);
-        double overallSum = 0;
-        double foodSum = 0;
-        double billsSum = 0;
-        double clothesSum = 0;
-        double entertainmentSum = 0;
-        double uncategorizedSum = 0;
+        Map<String, Double> categoriesSum = new HashMap<>();
 
         for (ExpenseModel lastMonthExpense : lastMonthExpenses) {
             double value = lastMonthExpense.getValue();
-            overallSum += value;
-            switch (lastMonthExpense.getCategory()) {
-                case ExpenseModel.FOOD_CATEGORY:
-                    foodSum += value;
-                    break;
-                case ExpenseModel.BILLS_CATEGORY:
-                    billsSum += value;
-                    break;
-                case ExpenseModel.CLOTHES_CATEGORY:
-                    clothesSum += value;
-                    break;
-                case ExpenseModel.ENTERTAINMENT_CATEGORY:
-                    entertainmentSum += value;
-                    break;
-                case ExpenseModel.NONE_CATEGORY:
-                default:
-                    uncategorizedSum += value;
-                    break;
+            String category = lastMonthExpense.getCategory();
+            if(categoriesSum.containsKey(category)) {
+                categoriesSum.put(category, categoriesSum.get(category) + value);
+            } else {
+                categoriesSum.put(category, value);
             }
-        }
+            }
 
-        String reportText = getReportText(timestamp, overallSum, foodSum, billsSum, clothesSum, entertainmentSum, uncategorizedSum);
+        String reportText = getReportText(timestamp, categoriesSum);
         return reportText;
     }
-
-    private String getReportText(long timestamp, double overallSum, double foodSum, double billsSum, double clothesSum, double entertainmentSum, double uncategorizedSum) {
+    private String getReportText(long timestamp, Map<String, Double> categoriesSum) {
+        double overallSum = categoriesSum.values().stream().mapToDouble(Double::doubleValue).sum();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-yyyy");
         StringBuilder sb = new StringBuilder();
         sb.append("REPORT ").append(fmt.print(timestamp - MONTH_IN_MS)).append(" : ").append(fmt.print(timestamp)).append("<br>");
-        ;
         sb.append("----------------------------------------------------------------------<br>");
         sb.append("Overall =                               ").append(overallSum).append("<br>");
         sb.append("----------------------------------------------------------------------<br>");
-        sb.append("Food =                                  ").append(foodSum).append("<br>");
-        sb.append("Bills =                                 ").append(billsSum).append("<br>");
-        sb.append("Clothes =                               ").append(clothesSum).append("<br>");
-        sb.append("Entertainment =                         ").append(entertainmentSum).append("<br>");
-        sb.append("Other =                                 ").append(uncategorizedSum).append("<br>");
-
+        for (String categoryName : categoriesSum.keySet()) {
+            double categorySumValue = categoriesSum.get(categoryName);
+            sb.append(categoryName + "                                  ").append(categorySumValue).append("<br>");
+        }
         return sb.toString();
     }
 }

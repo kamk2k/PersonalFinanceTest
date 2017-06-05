@@ -34,7 +34,7 @@ public class AddExpenseController {
             doubleValue = 0;
             System.out.print(e.toString());
         }
-        ExpenseModel model = new ExpenseModel(name, doubleValue, category, new Date().getTime());
+        ExpenseModel model = new ExpenseModel(name, doubleValue, category.toLowerCase(), new Date().getTime());
         saveExpenseUseCase.saveExpense(model);
         return "Greetings from Spring Boot! " + model.toString();
     }

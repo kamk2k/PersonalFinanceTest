@@ -12,10 +12,6 @@ import javax.persistence.Id;
 public class ExpenseModel {
 
     public static final String NONE_CATEGORY = "none";
-    public static final String FOOD_CATEGORY = "food";
-    public static final String BILLS_CATEGORY = "bills";
-    public static final String CLOTHES_CATEGORY = "clothes";
-    public static final String ENTERTAINMENT_CATEGORY = "entertainment";
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
