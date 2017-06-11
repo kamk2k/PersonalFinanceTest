@@ -1,7 +1,7 @@
 package com.corellidev.personalfinance.report;
 
 import com.corellidev.personalfinance.ExpenseRepository;
-import com.corellidev.personalfinance.model.ExpenseModel;
+import com.corellidev.personalfinance.model.Expense;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ public class GenerateMonthReportUseCase {
 
     public String getReport(long timestamp) {
         long monthAgoTimestamp = timestamp - MONTH_IN_MS;
-        List<ExpenseModel> lastMonthExpenses = expenseRepository.findByTimestampGreaterThan(monthAgoTimestamp);
+        List<Expense> lastMonthExpenses = expenseRepository.findByTimeGreaterThan(monthAgoTimestamp);
         Map<String, Double> categoriesSum = new HashMap<>();
 
-        for (ExpenseModel lastMonthExpense : lastMonthExpenses) {
+        for (Expense lastMonthExpense : lastMonthExpenses) {
             double value = lastMonthExpense.getValue();
             String category = lastMonthExpense.getCategory();
             if(categoriesSum.containsKey(category)) {

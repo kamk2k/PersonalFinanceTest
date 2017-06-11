@@ -1,34 +1,32 @@
 package com.corellidev.personalfinance.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Kamil on 2017-04-13.
  */
 @Entity
-public class ExpenseModel {
+public class Expense {
 
     public static final String NONE_CATEGORY = "none";
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="EXPENSE_SEQ1")
+    @SequenceGenerator(name="EXPENSE_SEQ1", sequenceName="EXPENSE_SEQ1", allocationSize=1)
     private Long id;
     private String name;
     private double value;
     private String category;
-    private long timestamp;
+    private long time;
 
-    public ExpenseModel(String name, double value, String category, long timestamp) {
+    public Expense(String name, double value, String category, long time) {
         this.name = name;
         this.value = value;
         this.category = category;
-        this.timestamp = timestamp;
+        this.time = time;
     }
 
-    protected ExpenseModel() {};
+    protected Expense() {};
 
     public Long getId() {
         return id;
@@ -62,21 +60,21 @@ public class ExpenseModel {
         this.category = category;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getTime() {
+        return time;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setTime(long time) {
+        this.time = time;
     }
 
     @Override
     public String toString() {
-        return "ExpenseModel{" +
+        return "Expense{" +
                 "name='" + name + '\'' +
                 ", value=" + value +
                 ", category='" + category + '\'' +
-                ", timestamp=" + timestamp +
+                ", time=" + time +
                 '}';
     }
 }

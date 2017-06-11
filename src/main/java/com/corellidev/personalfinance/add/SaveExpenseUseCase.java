@@ -1,9 +1,8 @@
 package com.corellidev.personalfinance.add;
 
 import com.corellidev.personalfinance.ExpenseRepository;
-import com.corellidev.personalfinance.model.ExpenseModel;
+import com.corellidev.personalfinance.model.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,8 +17,8 @@ public class SaveExpenseUseCase {
     public SaveExpenseUseCase() {
     }
 
-    public void saveExpense(ExpenseModel expenseModel) {
-        expenseRepository.save(expenseModel);
+    public void saveExpense(Expense expense) {
+        expenseRepository.save(expense);
     }
 
 }

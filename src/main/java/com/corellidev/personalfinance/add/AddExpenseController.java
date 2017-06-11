@@ -1,7 +1,7 @@
 package com.corellidev.personalfinance.add;
 
 import com.corellidev.personalfinance.ExpenseRepository;
-import com.corellidev.personalfinance.model.ExpenseModel;
+import com.corellidev.personalfinance.model.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +26,7 @@ public class AddExpenseController {
     @RequestMapping("/add")
     public String index(@RequestParam(value = "name", defaultValue = "") String name,
                         @RequestParam(value = "value", defaultValue = "0") String value,
-                        @RequestParam(value = "cat", defaultValue = ExpenseModel.NONE_CATEGORY) String category) {
+                        @RequestParam(value = "cat", defaultValue = Expense.NONE_CATEGORY) String category) {
         double doubleValue;
         try {
             doubleValue = Double.parseDouble(value);
@@ -34,15 +34,15 @@ public class AddExpenseController {
             doubleValue = 0;
             System.out.print(e.toString());
         }
-        ExpenseModel model = new ExpenseModel(name, doubleValue, category.toLowerCase(), new Date().getTime());
+        Expense model = new Expense(name, doubleValue, category.toLowerCase(), new Date().getTime());
         saveExpenseUseCase.saveExpense(model);
         return "Greetings from Spring Boot! " + model.toString();
     }
 
     @RequestMapping("/")
-    public List<ExpenseModel> defTest() {
-        List<ExpenseModel> list = new ArrayList<>();
-        for (ExpenseModel model : expenseRepository.findAll()) {
+    public List<Expense> defTest() {
+        List<Expense> list = new ArrayList<>();
+        for (Expense model : expenseRepository.findAll()) {
             list.add(model);
         }
         return list;

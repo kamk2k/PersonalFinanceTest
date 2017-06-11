@@ -9,7 +9,4 @@ public class PersonalFinanceTestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PersonalFinanceTestApplication.class, args);
 	}
-
-
-
 }
