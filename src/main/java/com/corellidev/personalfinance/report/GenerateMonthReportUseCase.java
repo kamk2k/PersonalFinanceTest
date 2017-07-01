@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,14 @@ public class GenerateMonthReportUseCase {
     private ExpenseRepository expenseRepository;
 
     public GenerateMonthReportUseCase() {
+    }
+
+    public List<Expense> getAllExpenses() {
+        List<Expense> result = new ArrayList<>();
+        for (Expense expense : expenseRepository.findAll()) {
+            result.add(expense);
+        }
+        return result;
     }
 
     public String getReport(long timestamp) {
