@@ -1,6 +1,7 @@
 package com.corellidev.personalfinance.add;
 
 import com.corellidev.personalfinance.ExpenseRepository;
+import com.corellidev.personalfinance.TokenVerifier;
 import com.corellidev.personalfinance.model.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,17 @@ public class AddExpenseController {
 
     @Autowired
     private SaveExpenseUseCase saveExpenseUseCase;
-
     @Autowired
     private ExpenseRepository expenseRepository;
+    @Autowired
+    private TokenVerifier tokenVerifier;
 
     @RequestMapping("/add")
-    public String addExpense(@RequestParam(value = "name", defaultValue = "") String name,
+    public String addExpense(@RequestHeader(value = "Google-Token", required = false) String token,
+                             @RequestParam(value = "name", defaultValue = "") String name,
                              @RequestParam(value = "value", defaultValue = "0") String value,
                              @RequestParam(value = "cat", defaultValue = Expense.NONE_CATEGORY) String category) {
+        System.out.println("token = " + tokenVerifier.verifyAndGetEmail(token));
         double doubleValue;
         try {
             doubleValue = Double.parseDouble(value);
@@ -40,7 +44,8 @@ public class AddExpenseController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<Expense> addExpense(@RequestBody Expense expense) {
+    public ResponseEntity<Expense> addExpense(@RequestHeader(value = "Google-Token", required = false) String token, @RequestBody Expense expense) {
+        System.out.println("token = " + token + " verified email " + tokenVerifier.verifyAndGetEmail(token));
         saveExpenseUseCase.saveExpense(expense);
         return new ResponseEntity<Expense>(expense, HttpStatus.OK);
     }
